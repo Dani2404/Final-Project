@@ -55,6 +55,17 @@ def GetTempAndHumidity():
 
 while True:
 
+	while TimeDateUpdate == False:		
+		result = subprocess.check_output(CheckConnection, shell=True)
+		print("Connection:{0}".format(result))
+		if result == "ok\n":
+			subprocess.call('sudo service ntp stop', shell=True)
+			subprocess.call('sudo ntpd -q', shell=True)
+			subprocess.call('sudo service ntp start', shell=True)
+			TimeDateUpdate = True
+			print("Time and Date Updated")
+
+
 	os.system(led0_on)
 	TimeDateSt = time.strftime("%Y%m%d-%H%M%S")
 	TimeSt = time.strftime("%H%M%S")
@@ -70,18 +81,6 @@ while True:
 			FirstInteration = False
 		else:
 			log.write("{0}\n".format(TimeDateSt))
-
-
-	# while TimeDateUpdate == False:		
-	# 	result = subprocess.check_output(CheckConnection, shell=True)
-	# 	print("Connection:{0}".format(result))
-	# 	if result == "ok\n":
-	# 		subprocess.call('sudo service ntp stop', shell=True)
-	# 		subprocess.call('sudo ntpd -q', shell=True)
-	# 		subprocess.call('sudo service ntp start', shell=True)
-	# 		TimeDateUpdate = True
-	# 		print("Time and Date Updated")
-
 
 	Input = "RAT"
 	ser.write(Input +'\r\n')
